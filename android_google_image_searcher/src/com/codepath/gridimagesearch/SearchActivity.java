@@ -30,6 +30,9 @@ public class SearchActivity extends Activity {
 	Button btnSearch;
 	ArrayList<ImageResult> imageResults = new ArrayList<ImageResult>();
 	ImageResultArrayAdapter imageAdapter;
+	
+	String imgsize = new String("small"); //default
+	String imgcolor = new String("blue"); //default
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +75,17 @@ public class SearchActivity extends Activity {
 	public void onImageSearch(View v) {
 		String query = etQuery.getText().toString();
 		Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
+		
+		Toast.makeText(this,
+				"Values of the Settings: " + 
+		                "\nSpinner 1 : "+  imgcolor +
+		                "\nSpinner 2 : "+ imgsize,
+					Toast.LENGTH_SHORT).show();
+		
 		AsyncHttpClient client = new AsyncHttpClient();
 		// https://ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
 		client.get("https://ajax.googleapis.com/ajax/services/search/images?rsz=8&" + "start=" + 0
-				+ "&v=1.0&q=" + Uri.encode(query), new JsonHttpResponseHandler() {
+				+ "&v=1.0&q=" + Uri.encode(query) + "&imgcolor=" + imgcolor + "&imgsz=" + imgsize, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject response) {
 				JSONArray imageJsonResults = null;
@@ -95,11 +105,16 @@ public class SearchActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	  if (resultCode == RESULT_OK && requestCode == 1) {	     
+		  
+		  	imgcolor = data.getExtras().getString("colorChoice");
+			imgsize = data.getExtras().getString("filterChoice");
+			
 			Toast.makeText(this,
 			"Values Selected from The Settings Activity: " + 
-	                "\nSpinner 1 : "+  data.getExtras().getString("colorChoice") +
-	                "\nSpinner 2 : "+ data.getExtras().getString("filterChoice"),
+	                "\nSpinner 1 : "+  imgcolor +
+	                "\nSpinner 2 : "+ imgsize,
 				Toast.LENGTH_SHORT).show();
+			
 	  }
 	} 
 
