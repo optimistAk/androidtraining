@@ -9,5 +9,8 @@
     <string name="title_activity_timeline">Your Timeline</string>
     <string name="action_icon_refresh">Refresh</string>
     <string name="action_icon_compose">Compose</string>
+    <string name="title_activity_compose">Compose New Tweet</string>
+    <string name="newTweet">New Tweet Here</string>
+    <string name="btnSubmitTweet">Tweet</string>
 
 </resources>

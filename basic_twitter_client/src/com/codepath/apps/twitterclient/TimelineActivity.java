@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -69,6 +70,17 @@ public class TimelineActivity extends Activity {
 	
 	public void onClickComposeHandler(MenuItem mi){
 		Toast.makeText(this, "Compose clicked", Toast.LENGTH_SHORT).show();
+		Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        startActivityForResult(i, 1);
 	}
+	
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (resultCode == RESULT_OK && requestCode == 1) {    	  
+    	  Toast.makeText(this, "returned to main screen", Toast.LENGTH_SHORT).show();
+
+      }
+    } 
+
 
 }
