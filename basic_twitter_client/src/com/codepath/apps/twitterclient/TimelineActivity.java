@@ -26,11 +26,20 @@ public class TimelineActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_timeline);
-		
+		setContentView(R.layout.activity_timeline);	
 		Log.d("DEBUG", "Testing Debug");
-		
-		  RestClientApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler(){
+		callTimelineRefresh();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.timeline, menu);
+		return true;
+	}
+	
+	private void callTimelineRefresh(){
+		RestClientApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(JSONArray jsonTweets) {
                     super.onSuccess(jsonTweets);
@@ -54,22 +63,14 @@ public class TimelineActivity extends Activity {
             }
             
 		});
-         
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.timeline, menu);
-		return true;
 	}
 		
 	public void onClickRefreshHandler(MenuItem mi){
-		Toast.makeText(this, "Refresh clicked", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Fetching new tweets", Toast.LENGTH_SHORT).show();
+		callTimelineRefresh();
 	}
 	
 	public void onClickComposeHandler(MenuItem mi){
-		Toast.makeText(this, "Compose clicked", Toast.LENGTH_SHORT).show();
 		Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
         startActivityForResult(i, 1);
 	}
@@ -77,8 +78,7 @@ public class TimelineActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (resultCode == RESULT_OK && requestCode == 1) {    	  
-    	  Toast.makeText(this, "returned to main screen", Toast.LENGTH_SHORT).show();
-
+    	  callTimelineRefresh();
       }
     } 
 

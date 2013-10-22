@@ -34,8 +34,6 @@ public class ComposeActivity extends Activity {
 		etTweet = (EditText) findViewById(R.id.etNewTweet);
 		String strTweet = etTweet.getText().toString();
 		
-		Toast.makeText(this, "Button clicked & tweet is: "+strTweet, Toast.LENGTH_SHORT).show();
-		
 		RestClientApp.getRestClient().postTweet(strTweet, new JsonHttpResponseHandler(){
 			
 			@Override
