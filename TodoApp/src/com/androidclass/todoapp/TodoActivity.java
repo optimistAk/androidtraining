@@ -2,6 +2,8 @@ package com.androidclass.todoapp;
 
 import java.util.ArrayList;
 
+import com.androidclass.groceryassistapp.R;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -29,14 +31,14 @@ public class TodoActivity extends Activity {
 
 		todoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemList);
 		lvItems.setAdapter(todoAdapter);
-		itemList.add("get milk");
+		itemList.add("organic 2% milk");
 	}
 
 	private void populateArraylistItems(){
 		itemList = new ArrayList<String>();
-		itemList.add("wake up");
-		itemList.add("turnoff alarm");
-		itemList.add("brush teeth");
+		itemList.add("AA eggs");
+		itemList.add("Yoplait youghurt");
+		itemList.add("Onions");
 	}
 	
 	public void onClickAddTodoItem(View v){
