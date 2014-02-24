@@ -40,7 +40,7 @@ public class TodoActivity extends Activity {
 
 		todoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemList);
 		lvItems.setAdapter(todoAdapter);
-		itemList.add("Daily Horoscope" + CommonLib.dailyHoroscope());
+		itemList.add("Daily Horoscope: " + CommonLib.dailyHoroscope());
 		
 		AsyncHttpClient client = new AsyncHttpClient();
 		
@@ -65,7 +65,7 @@ public class TodoActivity extends Activity {
 					
 					Log.d("DEBUG", horoscopeJsonResults.getJSONObject(0).getString("description").toString());
 					
-					itemList.add("Aravind is good");
+					//itemList.add("Aravind is good");
 					//itemList.add(horoscopeJsonResults.getJSONObject(0).getString("description").toString());
 					
 					
@@ -78,16 +78,16 @@ public class TodoActivity extends Activity {
 
 	private void populateArraylistItems(){
 		itemList = new ArrayList<String>();
-		itemList.add("Color to wear today:" + CommonLib.colorToWear());
+		itemList.add("Color to wear today: " + CommonLib.colorToWear(64, false));
 		itemList.add("Weather: cloudy, 77F, humid in the evening");
 //		itemList.add("Yoplait youghurt");
 //		itemList.add("Onions");
 	}
 	
 	public void onClickAddTodoItem(View v){
-		EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-		this.todoAdapter.add(etNewItem.getText().toString());
-		etNewItem.setText("");
+		//EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
+		//this.todoAdapter.add(etNewItem.getText().toString());
+		//etNewItem.setText("");
 		Toast.makeText(this, "Item added", Toast.LENGTH_LONG).show();		
 	}
 	
