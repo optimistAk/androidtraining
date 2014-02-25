@@ -10,6 +10,9 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +32,7 @@ public class TodoActivity extends Activity {
 	private ArrayList<String> itemList; 
 	private ArrayAdapter<String> todoAdapter;
 	private ListView lvItems;
+	public String horoscopeText="hello";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,36 +48,45 @@ public class TodoActivity extends Activity {
 		
 		AsyncHttpClient client = new AsyncHttpClient();
 		
-//		client.get("http://pipes.yahoo.com/pipes/pipe.run?_id=4c472300378d711f542007004321a950&_render=json", new AsyncHttpResponseHandler() {
-//		    @Override
-//		    public void onSuccess(String response) {
-//		        System.out.println("AKKKKK" + response);
-//		        Log.d("DEBUG", "AKKK" + response.toString());
-//		    }
-//		});
-		
 		client.get("http://pipes.yahoo.com/pipes/pipe.run?_id=4c472300378d711f542007004321a950&_render=json", new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject response) {	
-				Log.d("DEBUG", "AKK");
 				JSONArray horoscopeJsonResults = null;
-				try {
-					Log.d("DEBUG", "AKK");
-					//Log.d("DEBUG", response.getJSONObject("value").getJSONArray("items").toString());
+				try {				
+					horoscopeJsonResults = response.getJSONObject("value").getJSONArray("items");				
 					
-					horoscopeJsonResults = response.getJSONObject("value").getJSONArray("items");
+					// Pass the index value based on what sunsign, here, 0->Aries, 1->Taurus ... etc				
+					String horoscopeFullString = horoscopeJsonResults.getJSONObject(0).getString("description").toString();
 					
-					Log.d("DEBUG", horoscopeJsonResults.getJSONObject(0).getString("description").toString());
+					Document doc = Jsoup.parse(horoscopeFullString);
+					Element p= doc.select("p").first();
+					horoscopeText = p.text();
+
+					Log.d("DEBUG", horoscopeText);
 					
-					//itemList.add("Aravind is good");
-					//itemList.add(horoscopeJsonResults.getJSONObject(0).getString("description").toString());
-					
+					itemList.add(horoscopeText);
 					
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		
+		itemList.add(horoscopeText);
+		
+		
+//		client.get("http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&APPID=055a946d7193b12bb5ad491595be1124", new JsonHttpResponseHandler() {
+//			@Override
+//			public void onSuccess(JSONObject response) {	
+//				try {
+//					Log.d("DEBUG", response.getJSONObject("main").getString("temp").toString());
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+		
+		
 	}
 
 	private void populateArraylistItems(){
