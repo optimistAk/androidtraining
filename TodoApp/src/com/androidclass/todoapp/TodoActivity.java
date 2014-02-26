@@ -64,7 +64,7 @@ public class TodoActivity extends Activity {
 
 					Log.d("DEBUG", horoscopeText);
 					
-					itemList.add(horoscopeText);
+					todoAdapter.add("Daily Horoscope" + horoscopeText);
 					
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -72,7 +72,6 @@ public class TodoActivity extends Activity {
 			}
 		});
 		
-		itemList.add(horoscopeText);
 		
 		
 //		client.get("http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&APPID=055a946d7193b12bb5ad491595be1124", new JsonHttpResponseHandler() {
