@@ -14,9 +14,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -33,6 +41,11 @@ public class TodoActivity extends Activity {
 	private ArrayAdapter<String> todoAdapter;
 	private ListView lvItems;
 	public String horoscopeText="hello";
+	
+	  private LocationManager locationManager;
+	  private String provider;
+	  private MyLocationListener mylistener;
+	  private Criteria criteria;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +98,33 @@ public class TodoActivity extends Activity {
 //			}
 //		});
 		
+		 // Get the location manager
+		  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		  // Define the criteria how to select the location provider
+		  criteria = new Criteria();
+		  criteria.setAccuracy(Criteria.ACCURACY_COARSE);	//default
+		  
+
+		  criteria.setCostAllowed(false); 
+		  // get the best provider depending on the criteria
+		  provider = locationManager.getBestProvider(criteria, false);
+	    
+		  // the last known location of this provider
+		  Location location = locationManager.getLastKnownLocation(provider);
+
+		  mylistener = new MyLocationListener();
+	
+		  if (location != null) {
+			  mylistener.onLocationChanged(location);
+		  } else {
+			  // leads to the settings because there is no last known location
+			  Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			  startActivity(intent);
+		  }
+		  // location updates: at least 1 meter and 200millsecs change
+		  //NETWORK_PROVIDER
+		  locationManager.requestLocationUpdates(provider, 200, 1, mylistener);
+		
 		
 	}
 
@@ -109,5 +149,55 @@ public class TodoActivity extends Activity {
 		getMenuInflater().inflate(R.menu.todo, menu);
 		return true;
 	}
+	
+	 private class MyLocationListener implements LocationListener {
+			
+		  @Override
+		  public void onLocationChanged(Location location) {
+			// Initialize the location fields
+			  
+				AsyncHttpClient client_w = new AsyncHttpClient();
 
+				client_w.get("http://api.openweathermap.org/data/2.5/weather?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&APPID=055a946d7193b12bb5ad491595be1124", new JsonHttpResponseHandler() {
+	                 @Override
+					public void onSuccess(JSONObject response) {
+	                	 Log.d("DEBUG", "weather0");
+						//String weatherResult = null;
+						try{
+							String weatherResult = response.getJSONObject("main").getString("temp").toString();
+							String cloudResult = response.getJSONObject("clouds").getString("all").toString();
+							String cdescResult = response.getJSONArray("weather").getJSONObject(0).getString("description");
+							Log.d("DEBUG", weatherResult);
+							Log.d("DEBUG", cloudResult);
+							Log.d("DEBUG", cdescResult);
+							
+						} catch (JSONException e) {
+							Log.d("DEBUG", "weather2");
+							e.printStackTrace();
+						}
+					}
+				  
+				});
+		  }
+	
+		  @Override
+		  public void onStatusChanged(String provider, int status, Bundle extras) {
+			  Toast.makeText(TodoActivity.this, provider + "'s status changed to "+status +"!",
+				        Toast.LENGTH_SHORT).show();
+		  }
+	
+		  @Override
+		  public void onProviderEnabled(String provider) {
+			  Toast.makeText(TodoActivity.this, "Provider " + provider + " enabled!",
+		        Toast.LENGTH_SHORT).show();
+	
+		  }
+	
+		  @Override
+		  public void onProviderDisabled(String provider) {
+			  Toast.makeText(TodoActivity.this, "Provider " + provider + " disabled!",
+		        Toast.LENGTH_SHORT).show();
+		  }
+
+     }
 }
