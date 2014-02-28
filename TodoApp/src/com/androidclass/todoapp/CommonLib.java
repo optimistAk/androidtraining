@@ -1,19 +1,27 @@
 package com.androidclass.todoapp;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONObject;
 
+import android.util.Log;
+
 
 public class CommonLib {
 
+	private static final int MAXNUMQUOTES = 100;
+	private static String[] quotes = new String[MAXNUMQUOTES];
+	
 	public static String dailyHoroscope(){
 		JSONObject jObj = new JSONObject();
 		return "Today you will rock Mr. Raj !!";
 
 	}
 	/*
-	 * Gender??
+	 * Gender?? ** should we consider gender? **
 	 * 
 	 * (nice temp & clear sky)
 	 *  Happy: Pink, light blue, green, maybe purple
@@ -76,5 +84,41 @@ public class CommonLib {
 		}
 		
 		return dressColor;
+	}
+	
+	
+	public static String quoteOfTheDay(){
+		
+		// For hack day, maintain an array of strings for quotes
+		// For shipping the hack, move this to server and return a Json or something, make it light-weight
+		quotes[0]="As you sow, so you reap";
+		quotes[1]="It is never too late to be what you might have been";
+		quotes[2]="What the mind can conceive, it can achieve";
+		
+		int idx = new Random().nextInt(3);
+		return quotes[idx];
+	}
+	
+	public static String raahuKaalam(int dayOfWeek){
+		// hashmap with the standard times and raahu kalams
+		// 1-7 SUNDAY to SATURDAY
+		
+		Map<Integer,String> mapDayToRaahuKaalam = new HashMap<Integer,String>();
+		
+		mapDayToRaahuKaalam.put(2, "7:30AM to 9AM");
+		mapDayToRaahuKaalam.put(7, "9AM to 10:30AM");
+		mapDayToRaahuKaalam.put(6, "10:30AM to 12PM");
+		mapDayToRaahuKaalam.put(4, "12PM to 1:30PM");
+		mapDayToRaahuKaalam.put(5, "1:30PM to 3PM");
+		mapDayToRaahuKaalam.put(3, "3PM to 4:30PM");
+		mapDayToRaahuKaalam.put(1, "4:30PM to 6PM");
+		
+		if(! mapDayToRaahuKaalam.containsKey(dayOfWeek)){
+			return "Sorry! Invalid Day Detected";
+		}else{
+			Log.d("DEBUG", mapDayToRaahuKaalam.get(dayOfWeek));
+			return mapDayToRaahuKaalam.get(dayOfWeek);	
+		}
+		
 	}
 }

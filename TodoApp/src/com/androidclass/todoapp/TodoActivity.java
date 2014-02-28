@@ -1,10 +1,10 @@
 package com.androidclass.todoapp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import com.androidclass.groceryassistapp.R;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -19,7 +19,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.app.Activity;
@@ -29,7 +28,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -75,7 +73,7 @@ public class TodoActivity extends Activity {
 					horoscopeText = p.text();
 
 					// Replace this with birth date
-					todoAdapter.add("Daily Horoscope for " + CommonLib.findZodiacSign("9", "6") + ": \n" + horoscopeText);
+					todoAdapter.add("Daily Horoscope for " + CommonLib.findZodiacSign("12", "6") + ": \n" + horoscopeText);
 
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -83,18 +81,6 @@ public class TodoActivity extends Activity {
 			}
 		});
 
-
-
-		//		client.get("http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&APPID=055a946d7193b12bb5ad491595be1124", new JsonHttpResponseHandler() {
-		//			@Override
-		//			public void onSuccess(JSONObject response) {	
-		//				try {
-		//					Log.d("DEBUG", response.getJSONObject("main").getString("temp").toString());
-		//				} catch (JSONException e) {
-		//					e.printStackTrace();
-		//				}
-		//			}
-		//		});
 
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -122,6 +108,15 @@ public class TodoActivity extends Activity {
 		// location updates: at least 1 meter and 200millsecs change
 		//NETWORK_PROVIDER
 		locationManager.requestLocationUpdates(provider, 200, 1, mylistener);
+		
+		// Raahu Kaalam for today
+		Calendar c = Calendar.getInstance(); 
+		Integer dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		Log.d("DEBUG", "Today is" + dayOfWeek.toString());
+		todoAdapter.add("Raahu Kaalam: " + CommonLib.raahuKaalam(dayOfWeek));
+		
+		// quote of the day
+		todoAdapter.add(CommonLib.quoteOfTheDay());
 
 
 	}
@@ -130,8 +125,6 @@ public class TodoActivity extends Activity {
 		itemList = new ArrayList<String>();
 		itemList.add("Color to wear today: " + CommonLib.colorToWear(64, false));
 		itemList.add("Weather: cloudy, 77F, humid in the evening");
-		//		itemList.add("Yoplait youghurt");
-		//		itemList.add("Onions");
 	}
 
 	public void onClickAddTodoItem(View v){
@@ -159,8 +152,6 @@ public class TodoActivity extends Activity {
 			client_w.get("http://api.openweathermap.org/data/2.5/weather?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&APPID=055a946d7193b12bb5ad491595be1124", new JsonHttpResponseHandler() {
 				@Override
 				public void onSuccess(JSONObject response) {
-					Log.d("DEBUG", "weather0");
-					//String weatherResult = null;
 					try{
 						String weatherResult = response.getJSONObject("main").getString("temp").toString();
 						String cloudResult = response.getJSONObject("clouds").getString("all").toString();
